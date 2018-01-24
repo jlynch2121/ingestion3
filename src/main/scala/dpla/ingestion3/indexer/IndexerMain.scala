@@ -36,19 +36,13 @@ object IndexerMain {
       .getOrCreate()
     val sc = spark.sparkContext
 
-    //Using this API for reading Avro means that we get the
-    val rawData: RDD[Row] = spark.read
-      .format("com.databricks.spark.avro")
-      .option("avroSchema", schema)
-      .load(input).rdd
+    // All of the rows in the JSON file
+    val rawData: RDD[String] = spark.read.textFile(input).rdd
 
-    /**
-      * Select only those rows that contain the `filter` substring anywhere
-      * within the `document` String.
-      */
-    val filteredData: RDD[Row] = {
+    // Those rows that contain the `filter` substring
+    val filteredData: RDD[String] = {
       filter match {
-        case Some(filter) => rawData.filter(_.getAs[String]("document").contains(filter))
+        case Some(f) => rawData.filter(_.contains(f))
         case None => rawData
       }
     }
@@ -66,14 +60,14 @@ object IndexerMain {
 
     val rdd: RDD[String] = filteredData.map(
       row => {
-        val doc: String = row.getAs[String]("document")
-        // We remove the _id property of the document because Elasticsearch 5
-        // rejects it.  This should be fine, because we make no promises to
-        // users about its existence or utility. In fact,
+        // We remove the "_" properties of the document because Elasticsearch 5+
+        // rejects it.  We make no promises to users about their existence or
+        // utility. In fact,
         // https://dp.la/info/developers/codex/responses/field-reference/ says
         // for all "_" fields, "Internal field -- look away."
-        val fixedDoc: String = doc.replaceFirst(""""_id":\s*".+?",""", "")
-        fixedDoc
+        row.replaceFirst(""""_id":\s*".+?",""", "")
+           .replaceFirst(""""_type":\s*".+?",""", "")
+           .replaceFirst(""""_index":\s*".+?",""", "")
       }
     )
 
