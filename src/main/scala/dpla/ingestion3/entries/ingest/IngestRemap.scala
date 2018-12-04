@@ -50,14 +50,10 @@ object IngestRemap extends MappingExecutor
     val i3Conf = new Ingestion3Conf(confFile, Some(shortName))
     val conf = i3Conf.load()
 
-    // Read spark master property from conf, default to 'local[1]' if not set
-    val sparkMaster = conf.spark.sparkMaster.getOrElse("local[1]")
-
     val sparkConf = new SparkConf()
       .setAppName(s"Mapping: $shortName")
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .set("spark.kryoserializer.buffer.max", "200")
-      .setMaster(sparkMaster)
 
     // TODO These processes should return some flag or metric to help determine whether to proceed
     // Mapping

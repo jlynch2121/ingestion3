@@ -41,13 +41,9 @@ object MappingEntry extends MappingExecutor {
     val i3Conf = new Ingestion3Conf(confFile, Some(shortName))
     val conf: i3Conf = i3Conf.load()
 
-    // Read spark master property from conf, default to 'local[1]' if not set
-    val sparkMaster = conf.spark.sparkMaster.getOrElse("local[1]")
-
     val sparkConf = new SparkConf()
       .setAppName(s"Mapping: $shortName")
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-      .setMaster(sparkMaster)
 
     // Log config file location and provider short name.
     executeMapping(sparkConf, dataIn, dataOut, shortName, logger)

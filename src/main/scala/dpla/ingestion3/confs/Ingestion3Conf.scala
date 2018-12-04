@@ -49,7 +49,6 @@ class Ingestion3Conf(confFilePath: String, providerName: Option[String] = None) 
         query = getProp(providerConf, "harvest.query")
       ),
       i3Spark(
-        sparkMaster = getProp(providerConf, "spark.master"),
         // FIXME these should be removed
         sparkDriverMemory = getProp(providerConf, "spark.driverMemory"),
         sparkExecutorMemory= getProp(providerConf, "spark.executorMemory")
@@ -168,7 +167,6 @@ case class i3Twofishes(
                 )
 
 case class i3Spark (
-                     sparkMaster: Option[String] = None,
                      sparkDriverMemory: Option[String] = None,
                      sparkExecutorMemory: Option[String] = None
                    )

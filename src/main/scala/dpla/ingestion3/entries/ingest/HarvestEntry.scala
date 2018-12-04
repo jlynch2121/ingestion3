@@ -35,7 +35,6 @@ object HarvestEntry extends HarvestExecutor {
       .setAppName("Harvest")
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .set("spark.kryoserializer.buffer.max", "200")
-      .setMaster(providerConf.spark.sparkMaster.getOrElse("local[*]"))
 
     // Execute harvest.
     execute(sparkConf, shortName, dataOut, providerConf, harvestLogger)

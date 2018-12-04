@@ -45,7 +45,6 @@ object ReportsEntry {
     val sparkConf =
       new SparkConf()
         .setAppName("reports")
-        .setMaster(i3Conf.spark.sparkMaster.getOrElse("local[*]"))
 
     executeAllReports(sparkConf, dataIn, dataOut, shortName, logger)
   }

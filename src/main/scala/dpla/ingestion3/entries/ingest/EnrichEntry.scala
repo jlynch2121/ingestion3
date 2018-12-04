@@ -45,7 +45,6 @@ object EnrichEntry extends EnrichExecutor {
       .setAppName("Enrichment")
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
       .set("spark.kryoserializer.buffer.max", "200")
-      .setMaster(i3Conf.spark.sparkMaster.getOrElse("local[*]"))
 
     executeEnrichment(sparkConf, dataIn, dataOut, shortName, enrichLogger, i3Conf)
   }

@@ -37,7 +37,6 @@ object JsonlEntry extends JsonlExecutor {
     val sparkConf =
       new SparkConf()
       .setAppName("jsonl")
-      .setMaster("local[*]")
 
     executeJsonl(sparkConf, dataIn, dataOut, shortName, Utils.createLogger("jsonl"))
   }
